@@ -1,31 +1,31 @@
-# Ejercicio X – [titulo del ejercicio]
+# Ejercicio 1 – Ejecutables. Procesos. Servicios.
 
 **Autor:** Alejandro Épila  
-**Asignatura:** [nombre asignatura]
-**Curso:** 2º DAM
+**Asignatura:** [nombre asignatura]  
+**Curso:** 2º DAM  
 **Fecha:** Noviembre 2025
 
 ---
 
-## 1️⃣ Introducción y contextualización
+## 1. Introducción breve y contextualización
 
 a
 
 ---
 
-## 2️⃣ Desarrollo técnico detallado
+## 2. Desarrollo detallado y preciso
 
 a
 
 ---
 
-## 3️⃣ Aplicación práctica y resultados
+## 3. Aplicación práctica
 
 a
 
 ---
 
-## 4️⃣ Conclusión
+## 4. Conclusión breve
 
 a
 

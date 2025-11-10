@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi formulario</title>
+</head>
+
+<body>
+
+  <form action="quienteprocesa.php" method="POST">
+
+    <fieldset>
+      <legend>Información personal</legend>
+
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre"><br><br>
+
+      <label for="edad">Edad:</label>
+      <input type="range" id="edad" name="edad" min="1" max="100" oninput="verEdad(this.value)">
+      <span id="valorEdad">50</span><br><br>
+
+      <label for="pais">País:</label>
+      <select id="pais" name="pais">
+        <option value="españa">España</option>
+        <option value="francia">Francia</option>
+        <option value="alemania">Alemania</option>
+        <option value="italia">Italia</option>
+      </select><br><br>
+    </fieldset>
+
+    <fieldset>
+      <legend>Intereses personales</legend>
+
+      <label for="hobby">Hobby:</label>
+      <input type="text" id="hobby" name="hobby"><br><br>
+    </fieldset>
+
+    <input type="submit" value="Enviar">
+
+  </form>
+
+</body>
+<script>
+  function verEdad(edad) {
+    document.getElementById("valorEdad").innerText = edad;
+  }
+</script>
+
+</html>
