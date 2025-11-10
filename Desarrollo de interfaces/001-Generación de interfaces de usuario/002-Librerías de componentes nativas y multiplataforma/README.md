@@ -85,6 +85,6 @@ El ejercicio permite comprender la importancia de los formularios en HTML5 y la 
 - ``<fieldset>`` y ``<legend>`` para agrupar y dar contexto a los campos relacionados.
 
 La estructura del formulario es simple, accesible y cumple con los estándares del lenguaje.
-Además, demuestra cómo HTML5 facilita la creación de interfaces intuitivas.
+Además, demuestra cómo HTML5 facilita la creación de interfaces intuitivas. El uso de JavaScript en este caso se limita a mejorar la experiencia del usuario mostrando el valor seleccionado en el rango de ead.
 
 ---
