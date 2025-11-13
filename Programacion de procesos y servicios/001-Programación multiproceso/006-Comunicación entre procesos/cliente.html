@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>WS Compute Client</title>
+</head>
+
+<body>
+  <script>
+    // URL del servidor WebSocket local
+    const url = "ws://127.0.0.1:8765";
+    let ws, reconnectTimer;
+
+    function connect() {
+      // Crear conexión WebSocket
+      ws = new WebSocket(url);
+
+      // Evento: conexión establecida
+      ws.onopen = () => {
+        console.log("✅ Connected to", url);
+      };
+
+      // Evento: mensaje recibido del servidor
+      ws.onmessage = (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          // Comprobamos si es una tarea de tipo repeat_multiply
+          if (msg.type === "task" && msg.op === "repeat_multiply") {
+            const { task_id, initial, factor, times } = msg;
+            console.log("🧮 Task received:", msg);
+
+            const t0 = performance.now();
+            // Cálculo: initial * (factor ** times)
+            // Math.pow es más eficiente que multiplicar en un bucle
+            const result = initial * Math.pow(factor, times);
+            const duration_ms = Math.round(performance.now() - t0);
+
+            // Construimos el mensaje de resultado
+            const reply = {
+              type: "result",
+              task_id,
+              result,
+              duration_ms,
+              agent: navigator.userAgent
+            };
+
+            // Enviar resultado de vuelta al servidor
+            ws.send(JSON.stringify(reply));
+            console.log("📤 Result sent:", reply);
+          } else {
+            console.log("📩 Message:", msg);
+          }
+        } catch (err) {
+          console.log("📩 Raw message (no JSON):", e.data);
+        }
+      };
+
+      // Evento: conexión cerrada
+      ws.onclose = (e) => {
+        console.warn("❌ Closed:", e.code, e.reason);
+        scheduleReconnect();
+      };
+
+      // Evento: error
+      ws.onerror = (e) => {
+        console.error("⚠️ Error:", e);
+        // Dejamos que onclose gestione el reconectar
+      };
+    }
+
+    // Reintento automático de conexión
+    function scheduleReconnect() {
+      if (reconnectTimer) return;
+      reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        console.log("🔄 Reconnecting…");
+        connect();
+      }, 3000);
+    }
+
+    // Iniciar la conexión
+    connect();
+  </script>
+</body>
+
+</html>
