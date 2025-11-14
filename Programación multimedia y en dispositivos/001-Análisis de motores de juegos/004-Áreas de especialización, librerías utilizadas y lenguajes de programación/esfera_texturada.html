@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Esfera A-Frame</title>
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+</head>
+
+<body>
+  <a-scene>
+    <!-- Cielo negro para ver bien la esfera iluminada -->
+    <a-sky color="#000000"></a-sky>
+
+    <!-- Esfera con textura y mapa de rugosidad -->
+    <a-sphere position="0 1.25 -5" radius="3"
+      material="src: nasatierra.jpg; metalness: 0.2; roughness: 0.5; roughnessMap: rugosidad.jpg"></a-sphere>
+
+    <!-- Plano que hace de suelo -->
+    <a-plane position="0 0 -10" rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
+
+    <!-- Luz ambiental suave -->
+    <a-entity light="type: ambient; intensity: 0.2"></a-entity>
+
+    <!-- Luz direccional más intensa desde un lateral -->
+    <a-entity light="type: directional; intensity: 2" position="2 4 0"></a-entity>
+
+    <!-- Cámara por defecto del usuario -->
+    <a-entity camera position="0 1.6 0" look-controls></a-entity>
+  </a-scene>
+</body>
+
+</html>

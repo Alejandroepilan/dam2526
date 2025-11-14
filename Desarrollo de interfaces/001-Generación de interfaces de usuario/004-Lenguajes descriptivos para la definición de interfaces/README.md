@@ -1,7 +1,7 @@
 # Ejercicio 4 – Ejecutables. Procesos. Servicios.
 
 **Autor:** Alejandro Épila  
-**Asignatura:** [nombre asignatura]  
+**Asignatura:** Programación multimedia y en dispositivos  
 **Curso:** 2º DAM  
 **Fecha:** Noviembre 2025
 
