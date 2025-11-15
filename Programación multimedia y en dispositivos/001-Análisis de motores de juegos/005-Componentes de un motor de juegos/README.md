@@ -37,6 +37,415 @@ Con los cambios realizados, la escena ahora permite:
 
 Estos ejemplos ayudan a visualizar de forma inmediata cómo se comportan los elementos cuando se modifican sus transformaciones en un entorno tridimensional.
 
+#### ``index.html``
+
+```
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio Grid • CSS3D Camera</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #0f1720;
+      --ink: #e6eef9;
+      --muted: #a9b6c7;
+      --ring: #4da3ff;
+      --gap: 24px;
+      --pad: 32px;
+      --radius: 18px;
+      --perspective: 1400px;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      overflow: hidden;
+      background: radial-gradient(1200px 1200px at 80% -20%, #15314d 0%, #0b0f14 60%) fixed;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans";
+    }
+
+    .scene {
+      height: 100vh;
+      padding: var(--pad);
+      box-sizing: border-box;
+      perspective: var(--perspective);
+      perspective-origin: 0% 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: var(--gap);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transform-style: preserve-3d;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: .2px;
+      font-size: clamp(18px, 2.2vw, 32px);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(12px, 1.2vw, 16px);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .controls label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .controls input[type="range"] {
+      width: 160px;
+    }
+
+    .controls button {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform-origin: 0% 100%;
+      will-change: transform;
+    }
+
+    .floor-shadow {
+      position: absolute;
+      inset: -6% -10% -25% -10%;
+      background:
+        radial-gradient(120% 35% at 15% 100%,
+          rgba(0, 0, 0, .45) 0%,
+          rgba(0, 0, 0, .25) 35%,
+          rgba(0, 0, 0, 0) 70%);
+      transform: translateZ(-200px) rotateX(90deg);
+      pointer-events: none;
+    }
+
+    .grid {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: var(--gap);
+      transform-style: preserve-3d;
+    }
+
+    .card {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 10px 30px rgba(0, 0, 0, 0.35);
+      transform-style: preserve-3d;
+      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+      will-change: transform, box-shadow, filter;
+      --jx: 0px;
+      --jy: 0px;
+      --jz: 0px;
+      transform: translate3d(var(--jx), var(--jy), var(--jz));
+    }
+
+    .thumb {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom right, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.0)),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 6px),
+        radial-gradient(120% 120% at 0% 0%, #204a72 0%, #132336 45%, #0f1720 80%);
+      transform: translateZ(1px);
+    }
+
+    .veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, .55) 0 35%, rgba(0, 0, 0, 0) 60%);
+      transform: translateZ(2px);
+      pointer-events: none;
+    }
+
+    .meta {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transform: translateZ(8px);
+    }
+
+    .title {
+      font-weight: 650;
+      font-size: clamp(12px, 1.1vw, 18px);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tag {
+      font-size: clamp(10px, .9vw, 13px);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(77, 163, 255, .14);
+      color: #cfe5ff;
+      border: 1px solid rgba(77, 163, 255, .25);
+      backdrop-filter: blur(4px);
+    }
+
+    .card:hover {
+      transform:
+        translate3d(var(--jx), var(--jy), calc(var(--jz) + 40px)) rotateX(-2.5deg) rotateY(2.5deg);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 22px 60px rgba(0, 0, 0, 0.5);
+      filter: saturate(1.08);
+    }
+
+    .card:focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 3px;
+    }
+
+    @media (max-aspect-ratio: 16/10),
+    (max-width: 1200px) {
+      :root {
+        --gap: 16px;
+        --pad: 16px;
+        --perspective: 1100px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scene">
+    <header>
+      <div>
+        <h1>My Portfolio — CSS3D</h1>
+        <div class="subtitle">Low side-bottom perspective (4×3, all on screen)</div>
+      </div>
+      <div class="controls">
+        <label>
+          Perspectiva
+          <input type="range" id="perspRange" min="600" max="2000" value="1400">
+        </label>
+        <button id="randomBtn">Distribución aleatoria</button>
+      </div>
+    </header>
+
+    <div class="stage" aria-hidden="false">
+      <div class="floor-shadow"></div>
+
+      <section class="grid" aria-label="Portfolio items">
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Landing Page Redesign</div>
+            <div class="tag">Web</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">E-commerce UI Kit</div>
+            <div class="tag">UI</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Motion Graphics Reel</div>
+            <div class="tag">Motion</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Brand System “Aurora”</div>
+            <div class="tag">Branding</div>
+          </div>
+        </article>
+
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Mobile App Dashboard</div>
+            <div class="tag">App</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">3D Product Shots</div>
+            <div class="tag">3D</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Data Viz Suite</div>
+            <div class="tag">Analytics</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Illustration Pack</div>
+            <div class="tag">Art</div>
+          </div>
+        </article>
+
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Marketing Microsite</div>
+            <div class="tag">Web</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Icon Set “Orbit”</div>
+            <div class="tag">Icons</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Corporate Templates</div>
+            <div class="tag">Docs</div>
+          </div>
+        </article>
+        <article class="card" tabindex="0">
+          <div class="thumb"></div>
+          <div class="veil"></div>
+          <div class="meta">
+            <div class="title">Photography Series</div>
+            <div class="tag">Photo</div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const stage = document.querySelector('.stage');
+    const cards = document.querySelectorAll('.card');
+    const range = document.getElementById('perspRange');
+    const randomBtn = document.getElementById('randomBtn');
+
+    let angleX = 18;
+    let angleY = -22;
+    const scale = 0.92;
+
+    function updateStageTransform() {
+      stage.style.transform =
+        `translateZ(0px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(${scale})`;
+    }
+    updateStageTransform();
+
+    range.addEventListener('input', () => {
+      const v = range.value;
+      root.style.setProperty('--perspective', v + 'px');
+    });
+
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    randomBtn.addEventListener('click', () => {
+      cards.forEach(card => {
+        const tx = rand(-20, 20);
+        const ty = rand(-10, 10);
+        const tz = rand(-80, 60);
+        card.style.setProperty('--jx', tx + 'px');
+        card.style.setProperty('--jy', ty + 'px');
+        card.style.setProperty('--jz', tz + 'px');
+      });
+    });
+
+    window.addEventListener('keydown', e => {
+      const stepRot = 3;
+      switch (e.key) {
+        case 'a':
+        case 'ArrowLeft':
+          angleY -= stepRot;
+          break;
+        case 'd':
+        case 'ArrowRight':
+          angleY += stepRot;
+          break;
+        case 'w':
+        case 'ArrowUp':
+          angleX -= stepRot;
+          break;
+        case 's':
+        case 'ArrowDown':
+          angleX += stepRot;
+          break;
+        default:
+          return;
+      }
+      updateStageTransform();
+    });
+  </script>
+</body>
+
+</html>
+```
+
 ---
 
 ## 4. Conclusión breve

@@ -1,7 +1,7 @@
 # Ejercicio 4 – Ejecutables. Procesos. Servicios.
 
 **Autor:** Alejandro Épila  
-**Asignatura:** Programación multimedia y en dispositivos  
+**Asignatura:** Desarrollo de interfaces  
 **Curso:** 2º DAM  
 **Fecha:** Noviembre 2025
 
@@ -9,24 +9,103 @@
 
 ## 1. Introducción breve y contextualización
 
-a
+En esta actividad he creado una interfaz sencilla basada en un input centrado en la página. El objetivo es practicar el uso de propiedades CSS, sombras y animaciones aplicadas a un componente visual básico.
 
 ---
 
 ## 2. Desarrollo detallado y preciso
 
-a
+He definido una clase CSS llamada jvinput con todas las propiedades indicadas: padding, bordes personalizados, sombras, tipografía, animación y estilos visuales. También he creado una animación llamada expande que aumenta el tamaño del input desde 0px hasta su tamaño final. Para centrar el elemento he usado posición absoluta y ``transform: translate``.
 
 ---
 
 ## 3. Aplicación práctica
 
-a
+El input queda siempre centrado en la pantalla, independientemente del tamaño de la ventana. Este tipo de diseño es útil para interfaces en móviles, pantallas pequeñas o formularios minimalistas donde un único componente debe ser protagonista.
+
+#### ``006-centrar siempre.html``
+
+```
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <title>Input centrado con sombras</title>
+
+  <style>
+    /* animacion para expandir el input */
+    @keyframes expande {
+      0% {
+        width: 0px;
+        height: 0px;
+        padding: 0px;
+      }
+
+      100% {
+        width: 200px;
+        height: 30px;
+        padding: 5px;
+      }
+    }
+
+    /* clase del input con todas las propiedades indicadas */
+    .jvinput {
+      padding: 5px;
+      border: 1px solid grey;
+      outline: none;
+      text-align: center;
+
+      border-top: 0px solid grey;
+      border-left: 1px solid grey;
+      border-right: 1px solid grey;
+      border-bottom: 0px solid grey;
+
+      border-radius: 5px;
+
+      animation: expande 1s;
+      animation-delay: 3s;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+
+      width: 0px;
+      height: 0px;
+      padding: 0px;
+
+      font-family: monospace;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+      background: rgb(250, 250, 250);
+      font-size: 10px;
+
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1) inset;
+
+      /* centrado absoluto */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    body {
+      margin: 0;
+      background: rgb(235, 235, 235);
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="text" class="jvinput" placeholder="nombre">
+
+</body>
+
+</html>
+```
 
 ---
 
 ## 4. Conclusión breve
 
-a
+La actividad me ha permitido practicar propiedades CSS comunes, efectos de sombras y animaciones básicas. También he trabajado el centrado absoluto, una técnica importante para interfaces adaptables en distintos dispositivos.
 
 ---

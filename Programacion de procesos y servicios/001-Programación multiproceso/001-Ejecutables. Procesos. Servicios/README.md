@@ -37,6 +37,9 @@ Para probar el funcionamiento del script, se realizaron distintas ejecuciones va
     if i % 10000 == 0:
       numero *= multiplicador
       print(f"Iteración {i} -> numero = {numero}")
+
+print("Acabo")
+print("Valor final:", numero)
   ```
 Se observa que el valor de ``numero`` cambia progresivamente en las iteraciones 0, 10000, 20000, 30000, etc.
 

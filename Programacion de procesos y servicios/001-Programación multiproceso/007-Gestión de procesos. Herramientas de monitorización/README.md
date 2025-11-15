@@ -45,6 +45,31 @@ La mecanica seleccionada es: Reparacion de discos de freno
 La mecanica seleccionada es: Diagnostico del motor
 ```
 
+#### ``mecanica.py``
+
+```
+class Mecanica:
+  def __init__(self, nombre):
+    self.nombre = nombre
+
+  def describir(self):
+    print(f"La mecanica seleccionada es: {self.nombre}")
+```
+
+#### ``main.py``
+
+```
+from mecanica import Mecanica
+
+m1 = Mecanica("Cambio de aceite")
+m2 = Mecanica("Reparacion de discos de freno")
+m3 = Mecanica("Diagnostico del motor")
+
+m1.describir()
+m2.describir()
+m3.describir()
+```
+
 ---
 
 ## 4. Conclusión breve

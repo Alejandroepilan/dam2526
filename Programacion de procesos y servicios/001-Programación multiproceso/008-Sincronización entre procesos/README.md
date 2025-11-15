@@ -98,6 +98,110 @@ Elige una opción: 4
 Título: libro1, Autor: autor1, ISBN: 1234
 ```
 
+#### ``libro.py``
+
+```
+class Libro:
+  def __init__(self, titulo, autor, isbn):
+    self.titulo = titulo
+    self.autor = autor
+    self.isbn = isbn
+
+  def __str__(self): # Se usa para representar el libro como una cadena
+    return f"Titulo: {self.titulo}, Autor: {self.autor}, ISBN: {self.isbn}"
+```
+
+#### ``biblioteca.py``
+
+```
+from libro import Libro
+
+class Biblioteca:
+  def __init__(self):
+    self.libros = []
+
+  def agregar_libro(self, libro):
+    self.libros.append(libro)
+    print("\nLibro añadido con exito.\n")
+
+  def buscar_por_titulo(self, titulo):
+    return [libro for libro in self.libros if titulo.lower() in libro.titulo.lower()]
+
+  def buscar_por_autor(self, autor):
+    return [libro for libro in self.libros if autor.lower() in libro.autor.lower()]
+
+  def listar_libros(self):
+    if not self.libros:
+      print("\nNo hay libros en la biblioteca.\n")
+    else:
+      print("\n--- Lista de libros ---")
+      for libro in self.libros:
+        print(libro)
+      print()
+```
+
+#### ``main.py``
+
+```
+from biblioteca import Biblioteca
+from libro import Libro
+
+def menu():
+  biblioteca = Biblioteca()
+
+  while True:
+    print("Bienvenido a la Biblioteca Digital")
+    print("1. Añadir libro")
+    print("2. Buscar libro por titulo")
+    print("3. Buscar libro por autor")
+    print("4. Listar todos los libros")
+    print("5. Salir")
+
+    opcion = input("\nElige una opcion: ")
+
+    if opcion == "1":
+      titulo = input("Ingresa el titulo del libro: ")
+      autor = input("Ingresa el autor del libro: ")
+      isbn = input("Ingresa el ISBN del libro: ")
+      libro = Libro(titulo, autor, isbn)
+      biblioteca.agregar_libro(libro)
+
+    elif opcion == "2":
+      titulo = input("Introduce parte o todo el titulo a buscar: ")
+      resultados = biblioteca.buscar_por_titulo(titulo)
+      if resultados:
+        print("\nResultados encontrados:")
+        for libro in resultados:
+          print(libro)
+        print()
+      else:
+        print("\nNo se encontraron libros con ese titulo.\n")
+
+    elif opcion == "3":
+      autor = input("Introduce parte o todo el autor a buscar: ")
+      resultados = biblioteca.buscar_por_autor(autor)
+      if resultados:
+        print("\nResultados encontrados:")
+        for libro in resultados:
+          print(libro)
+        print()
+      else:
+        print("\nNo se encontraron libros de ese autor.\n")
+
+    elif opcion == "4":
+      biblioteca.listar_libros()
+
+    elif opcion == "5":
+      print("¡Gracias por usar la biblioteca digital!")
+      break
+
+    else:
+      print("\nOpcion no valida. Intentalo de nuevo.\n")
+
+if __name__ == "__main__":
+  menu()
+```
+
 ---
 
 ## 4. Conclusión breve
